@@ -1,0 +1,44 @@
+type Query {
+
+    employee(
+      id: ID @eq @rules(apply: ["prohibits:email", "required_without:email"])
+      name: String @eq @rules(apply: ["prohibits:id", "required_without:id"])
+    ): Employee @find
+
+    employees(
+      name: String @where(operator: "like")
+    ): [Employee] @all
+
+
+}
+
+type Mutation {
+  createEmployee(
+    user_id:String!,
+    name: String!,
+    position:String!,
+  ): Employee! @create
+
+  updateEmployee(
+    id: ID!,
+    name: String!,
+    position:String!,
+  ): Employee @update
+
+  upsertEmployee(
+    id: ID!,
+    name: String!,
+    email: String!,
+    position:String!,
+  ): Employee @upsert
+
+  deleteEmployee(id: ID! @whereKey): Employee @delete
+}
+
+"Account of a person who utilizes this application."
+type Employee {    id: ID!
+    name: String!
+    position: String!
+    created_at: DateTime!
+    updated_at: DateTime!
+}
